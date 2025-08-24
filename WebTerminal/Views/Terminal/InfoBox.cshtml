@@ -1,4 +1,4 @@
-﻿@using Emse.QMagic.DAL;
+@using Emse.QMagic.DAL;
 @using Emse.QMagic.WebTerminal.Helpers;
 @{
     Layout = null;
@@ -13,7 +13,7 @@
     qmSegment Segment = ViewBag.Segment;
     List<qmService> Services = ViewBag.Services;
     List<qmSegment> Segments = ViewBag.Segments;
-
+    qmCustomer Customer = ViewBag.Customer;
 
     TimeSpan WaitingTime = TimeSpan.FromTicks(0);
     if (Ticket != null)
@@ -24,181 +24,107 @@
         WaitingTime = TimeSpan.FromTicks(DifferenceTime);
     }
 
-    qmCustomer Customer = ViewBag.Customer;
+    bool? isTransferred = ViewBag.isTransferred;
+    string TransferText = "";
 
-    if (Ticket != null && Ticket.TicketPrefix != "PAUSE")
+    if (isTransferred != null && isTransferred == true)
     {
-        bool? isTransferred = ViewBag.isTransferred;
-        string TransferText = "";
-
-        if (isTransferred != null && isTransferred == true)
+        List<qmTransferService> Transfers = ViewBag.TransferredService;
+        foreach (qmTransferService transfer in Transfers)
         {
-            List<qmTransferService> Transfers = ViewBag.TransferredService;
-            foreach (qmTransferService transfer in Transfers)
-            {
-                qmSegment tsegment = Segments.Where(x => x.SegmentID == transfer.TransferSegmentID).FirstOrDefault();
-                TransferText += " > " + Services.Where(x => x.ServiceID == tsegment.ServiceID).FirstOrDefault().ServiceName;
-            }
+            qmSegment tsegment = Segments.Where(x => x.SegmentID == transfer.TransferSegmentID).FirstOrDefault();
+            TransferText += " > " + Services.Where(x => x.ServiceID == tsegment.ServiceID).FirstOrDefault().ServiceName;
         }
-
-
-        <div class="row" style="padding-left:12px;">
-            <div class="col-3 ticketnumber">
-                <h1 style="font-weight:bold; vertical-align:central; margin-top:25px;">@(Ticket.TicketPrefix)@(Ticket.TicketNumber)</h1>
-            </div>
-            <div class="col-9">
-                <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                    <tr>
-                        <td align="right" style="font-weight:bold; padding-right:10px;">Service </td>
-                        <td align="left">@(Service.ServiceName) @Html.Raw(TransferText)</td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Print Time </td>
-                        <td align="left" height="35">@(Ticket.PrintTime.ToShortTimeString())</td>
-                    </tr>
-                    <tr>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Segment </td>
-                        <td align="left">@(Segment.SegmentName)</td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Waiting Time </td>
-                        <td align="left" height="35">@(WaitingTime.Hours):@(WaitingTime.Minutes):@(WaitingTime.Seconds)</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <button class="btn btn-light" onclick="MoreInformation(@(Ticket.TicketID));" data-bs-toggle="modal" data-bs-target="#MoreInformationModal"><i class="fa fa-user"></i> @(Localization.Translate(LanguageCode,"MoreInformation"))</button>
-                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#ChangeCustomerModal"><i class="fa fa-user-circle"></i> Change Info</button>
-                        </td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Transaction Time </td>
-                        <td align="left" height="35"><span class="elapsedtime" sec="0">&nbsp;</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-            <div class="col">
-                <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                    <tr>
-                        <td><b>Ticket Note</b></td>
-                        <td><input type="text" class="form-control" placeholder="Ticket Note" name="txtTicketNote" id="txtTicketNote" value="@(Ticket.TicketNote)" /></td>
-                        <td><button class="btn btn-primary" onclick="SaveTicketNote();"><i class="fa fa-check"></i> Save Note</button></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-            <div class="col">
-                @{
-                    if (Customer != null)
-                    {
-                        <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                            <tr style="border-bottom:solid 1px #000; font-weight:bold;">
-                                <td>Patient Name</td>
-                                <td>QID Number</td>
-                                <td>HC Number</td>
-                                <td>Phone Number</td>
-                                <td>Nationality</td>
-                                <td>Birth Date</td>
-                                <td>Expiry</td>
-                            </tr>
-                            <tr>
-                                <td>@(Customer.Name) @(Customer.Surname)</td>
-                                <td>@(Customer.UniqueID)</td>
-                                <td>@(Customer.HCID)</td>
-                                <td>@(Customer.GeneralNote)</td>
-                                <td>@(Customer.Phone)</td>
-                                <td>@(Customer.Country)</td>
-                                <td>@(Customer.BirthDate.Value.ToShortDateString())</td>
-                            </tr>
-                        </table>
-                    }
-                    else
-                    {
-                        <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                            <tr style="border-bottom:solid 1px #000; font-weight:bold;">
-                                <td>Patient Name</td>
-                                <td>QID Number</td>
-                                <td>HC Number</td>
-                                <td>Expiry</td>
-                                <td>Phone Number</td>
-                                <td>Nationality</td>
-                                <td>Birth Date</td>
-                            </tr>
-                            <tr>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                        </table>
-                    }
-                }
-            </div>
-        </div>
-        <input type="hidden" id="InfoTicketID" name="InfoTicketID" value="@(Ticket.TicketID)" />
-        <input type="hidden" id="InfoCustomerID" name="InfoCustomerID" value="@(Ticket.CustomerID)" />
     }
-    else
+}
+
+@if (Ticket != null && Ticket.TicketPrefix != "PAUSE")
+{
+    <div class="infobox-container">
+        <div class="infobox-header">
+            <div class="ticket-number">
+                @Ticket.TicketPrefix@Ticket.TicketNumber
+            </div>
+            <div class="ticket-service">
+                @Service.ServiceName @Html.Raw(TransferText)
+            </div>
+        </div>
+        <div class="infobox-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">@Localization.Translate(LanguageCode, "Segment")</span>
+                    <span class="info-value">@Segment.SegmentName</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">@Localization.Translate(LanguageCode, "PrintTime")</span>
+                    <span class="info-value">@Ticket.PrintTime.ToShortTimeString()</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">@Localization.Translate(LanguageCode, "WaitingTime")</span>
+                    <span class="info-value">@WaitingTime.Hours:@WaitingTime.Minutes:@WaitingTime.Seconds</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">@Localization.Translate(LanguageCode, "TransactionTime")</span>
+                    <span class="info-value elapsedtime" sec="0">00:00:00</span>
+                </div>
+            </div>
+            <div class="info-actions">
+                <button class="btn-secondary" onclick="MoreInformation(@Ticket.TicketID);">
+                    <i class="fa fa-user"></i> @Localization.Translate(LanguageCode, "MoreInformation")
+                </button>
+                <button class="btn-secondary" onclick="$('#ChangeCustomerModal').show();">
+                    <i class="fa fa-user-circle"></i> Change Info
+                </button>
+            </div>
+        </div>
+        <div class="infobox-footer">
+            <input type="text" class="form-control" placeholder="Ticket Note..." id="txtTicketNote" value="@Ticket.TicketNote" />
+            <button class="btn-primary" onclick="SaveTicketNote();"><i class="fa fa-check"></i></button>
+        </div>
+    </div>
+
+    if (Customer != null)
     {
-        <div class="row" style="padding-left:12px;">
-            <div class="col-3 ticketnumber">
-                <h1 style="font-weight:bold; vertical-align:central; margin-top:25px;">n/a</h1>
+        <div class="customer-details">
+            <div class="info-item">
+                <span class="info-label">Patient Name</span>
+                <span class="info-value">@Customer.Name @Customer.Surname</span>
             </div>
-            <div class="col-9">
-                <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                    <tr>
-                        <td align="right" style="font-weight:bold; padding-right:10px;">Service </td>
-                        <td align="left">n/a</td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Print Time </td>
-                        <td align="left" height="35">-:-</td>
-                    </tr>
-                    <tr>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Segment </td>
-                        <td align="left">n/a</td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Waiting Time </td>
-                        <td align="left" height="35">-:-</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><button class="btn btn-light" disabled><i class="fa fa-user"></i> @(Localization.Translate(LanguageCode,"MoreInformation"))</button></td>
-                        <td align="right" style="font-weight: bold; padding-right: 10px;">Transaction Time </td>
-                        <td align="left" height="35">-:-</td>
-                    </tr>
-                </table>
+            <div class="info-item">
+                <span class="info-label">QID</span>
+                <span class="info-value">@Customer.UniqueID</span>
             </div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-            <div class="col">
-                <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                    <tr>
-                        <td><b>Ticket Note</b></td>
-                        <td><input type="text" class="form-control" placeholder="Ticket Note" name="txtTicketNote" id="txtTicketNote" value="" /></td>
-                        <td><button class="btn btn-primary" disabled><i class="fa fa-check"></i> Save Note</button></td>
-                    </tr>
-                </table>
+            <div class="info-item">
+                <span class="info-label">HC Number</span>
+                <span class="info-value">@Customer.HCID</span>
             </div>
-        </div>
-        <div class="row" style="margin-top:20px;">
-            <div class="col">
-                <table width="100%" border="0" cellpadding="0" cellspacing="10">
-                    <tr style="border-bottom:solid 1px #000; font-weight:bold;">
-                        <td>Patient Name</td>
-                        <td>QID Number</td>
-                        <td>HC Number</td>
-                        <td>Expiry</td>
-                        <td>Phone Number</td>
-                        <td>Nationality</td>
-                        <td>Birth Date</td>
-                    </tr>
-                    <tr>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                </table>
+             <div class="info-item">
+                <span class="info-label">Phone</span>
+                <span class="info-value">@Customer.Phone</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Nationality</span>
+                <span class="info-value">@Customer.Country</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Birth Date</span>
+                <span class="info-value">@Customer.BirthDate.Value.ToShortDateString()</span>
             </div>
         </div>
     }
+
+    <input type="hidden" id="InfoTicketID" name="InfoTicketID" value="@Ticket.TicketID" />
+    <input type="hidden" id="InfoCustomerID" name="InfoCustomerID" value="@Ticket.CustomerID" />
+}
+else
+{
+    <div class="infobox-container placeholder">
+        <div class="infobox-header">
+            <div class="ticket-number">N/A</div>
+        </div>
+        <div class="infobox-body">
+            <p>@Localization.Translate(LanguageCode, "NoTicketIsCurrentlyBeingServed")</p>
+            <p>@Localization.Translate(LanguageCode, "ClickNextCallToProceed")</p>
+        </div>
+    </div>
 }

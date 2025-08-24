@@ -26,128 +26,114 @@
     }
 }
 
-<title>QMagic Web Terminal</title>
-<link rel="icon" type="image/x-icon" href="~/favicon.ico">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BilaQ Web Terminal</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico">
+    <link href="~/Content/bilaq-theme.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div class="login-container">
+        <form action="~/Home/Login" method="post" class="login-form" id="trmfrm">
+            <img src="~/assets/logo.png" height="100" class="logo" alt="BilaQ Logo" />
 
-<link href="~/Scripts/sign-in.css" rel="stylesheet">
-
-@Styles.Render("~/Content/css")
-@Scripts.Render("~/bundles/modernizr")
-@Scripts.Render("~/bundles/jquery")
-
-
-<main class="form-signin w-100 m-auto justify-content-center">
-    <form action="~/Home/Login" method="post" class="justify-content-center text-center" id="trmfrm">
-        <center><img src="~/assets/logo.png" height="150" class="mb-4" /></center>
-        @{
-            if (Name != "")
-            {
-                if (AskPin)
+            @{
+                if (Name != "")
                 {
-                    if (User != null)
+                    if (AskPin)
                     {
-                        // Everything perfect with LDAP
-                        <img src="@(User.ProfilePicture)" width="64" height="64" style="border-radius:32px; border:solid 1px #000; background-color:#FFF;" /><br />
-                        <h3>Welcome back <br /> @(User.FullName) !</h3>
-                        <input type="hidden" id="txtUsername" name="txtUsername" value="@(Name)" />
-                        <input type="password" class="form-control" id="ppsswwd" placeholder="PIN Code" name="txtPassword" />
-                        <!--floatingPassword-->
+                        if (User != null)
+                        {
+                            // LDAP user needs to enter PIN
+                            <img src="@(User.ProfilePicture)" class="profile-picture" alt="User Profile" /><br />
+                            <h3>Welcome back<br />@User.FullName!</h3>
+                            <input type="hidden" id="txtUsername" name="txtUsername" value="@Name" />
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="ppsswwd" placeholder="PIN Code" name="txtPassword" />
+                            </div>
+                        }
+                        else
+                        {
+                            // LDAP user not found, redirect
+                            Response.Redirect("LDAP");
+                        }
                     }
                     else
                     {
-                        //LDAP active user not found
-                        Response.Redirect("LDAP");
+                        // Direct login for non-PIN LDAP user
+                        <input type="hidden" id="txtUsername" name="txtUsername" value="@Name" />
+                        <input type="hidden" id="txtPassword" name="txtPassword" value="@User.Password" />
+
+                        if (Context.Request.QueryString["err"] == null)
+                        {
+                            <script>
+                                $(document).ready(function () {
+                                    $("#sbmt").html("<div class='spinner'></div>");
+                                    $("#trmfrm").attr("action", "Home/Login?ldap=true");
+                                    $("#trmfrm").submit();
+                                });
+                            </script>
+                        }
                     }
                 }
                 else
                 {
-                    //Directly login
-
-                    <input type="hidden" id="txtUsername" name="txtUsername" value="@(Name)" />
-                    <input type="hidden" id="txtPassword" name="txtPassword" value="@(User.Password)" />
-
-                    if (Context.Request.QueryString["err"] == null)
-                    {
-                        <script>
-                            $(document).ready(function () {
-                                $("#sbmt").html("<img src='assets/login.gif'/>");
-                                $("#trmfrm").attr("action", "Home/Login?ldap=true");
-                                $("#trmfrm").submit();
-                            });
-                        </script>
-                    }
+                    // Classic username/password login
+                    <h1 class="form-title">@Localization.Translate(LanguageCode, "PleaseSignIn")</h1>
+                    <div class="form-group">
+                        <label for="floatingInput">@Localization.Translate(LanguageCode, "Username")</label>
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Enter your username" name="txtUsername">
+                    </div>
+                    <div class="form-group">
+                        <label for="floatingPassword">@Localization.Translate(LanguageCode, "Password")</label>
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Enter your password" name="txtPassword">
+                    </div>
+                    <div class="form-group-inline">
+                        <input type="checkbox" id="rememberMe" value="remember-me" class="form-check-input" />
+                        <label for="rememberMe">@Localization.Translate(LanguageCode, "RememberMe")</label>
+                    </div>
                 }
             }
-            else
-            {
-                //Classic login page
-                <h1 class="h3 mb-3 fw-normal">@(Localization.Translate(LanguageCode,"PleaseSignIn"))</h1>
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Username" style="border-bottom-left-radius: 0px; border-bottom-right-radius:0px;" name="txtUsername">
-                    <label for="floatingInput">@(Localization.Translate(LanguageCode,"Username"))</label>
-                </div>
-                <div class="form-floating" style="margin-top:-1px;">
-                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="txtPassword">
-                    <label for="floatingPassword">@(Localization.Translate(LanguageCode,"Password"))</label>
-                </div>
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" value="remember-me" class="form-check-input" /> @(Localization.Translate(LanguageCode,"RememberMe"))
-                    </label>
-                </div>
-            }
-        }
 
-    <div class="row">
-        @{
-            switch (ErrorCode)
-            {
-                case "3":
-                    <div class="alert alert-danger" role="alert">
-                        User deleted or not found.
-                    </div>
-                    break;
-                case "1":
-                    <div class="alert alert-danger" role="alert">Username or password is incorred.</div>
-                    break;
-                case "5":
-                    <div class="alert alert-danger" role="alert">
-                        Unable to connect to QMagic Studio.
-                    </div>
-                    break;
-                case "4":
-                    <div class="alert alert-danger" role="alert">
-                        Unable to connect to the distribution server. Please check web keeper.(0x145300)
-                    </div>
-                    break;
-                case "6":
-                    <div class="alert alert-danger" role="alert">
-                        No license installed.
-                    </div>
-                    break;
-                case "7":
-                    string compname = HttpContext.Current.Request.QueryString["IP"];
-                    <div class="alert alert-warning" role="alert">
-                        Terminal is not determined. Save the computer name as "<b>@(compname)</b>" and try again.
-                    </div>
-                    break;
-                default:
-                    break;
-            }
-        }
+            <div class="error-container">
+                @{
+                    string alertClass = "alert-danger";
+                    string message = "";
+                    switch (ErrorCode)
+                    {
+                        case "1": message = "Username or password is incorrect."; break;
+                        case "3": message = "User deleted or not found."; break;
+                        case "4": message = "Unable to connect to the distribution server. Please check web keeper.(0x145300)"; break;
+                        case "5": message = "Unable to connect to QMagic Studio."; break;
+                        case "6": message = "No license installed."; break;
+                        case "7":
+                            string compname = HttpContext.Current.Request.QueryString["IP"];
+                            message = $"Terminal is not determined. Save the computer name as '{compname}' and try again.";
+                            alertClass = "alert-warning";
+                            break;
+                    }
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        <div class="alert @alertClass">@message</div>
+                    }
+                }
+            </div>
+
+            <div id="sbmt">
+                <button class="btn-submit" type="submit">
+                    <i class="fa fa-sign-in-alt"></i> @Localization.Translate(LanguageCode, "SignIn")
+                </button>
+            </div>
+            <p class="footer-text">&copy; @DateTime.Now.Year BilaQ<br />@System.Environment.MachineName</p>
+        </form>
     </div>
 
-        <div id="sbmt"><button class="w-100 btn btn-lg btn-primary" type="submit"><i class="fa fa-sign-in"></i> @(Localization.Translate(LanguageCode,"SignIn"))</button></div>
-        <p class="mt-5 mb-3 text-body-secondary" style="font-size:10px;">&copy; CEO Technology LLC<br />@(System.Environment.MachineName)<br />v1.18</p>
-    </form>
-</main>
+    <div class="language-switcher">
+        <a href="~/Home/SelectLanguage?LanguageCode=EN" class="@(LanguageCode == "EN" ? "active" : "")">EN</a> |
+        <a href="~/Home/SelectLanguage?LanguageCode=AR" class="@(LanguageCode == "AR" ? "active" : "")">عربي</a>
+    </div>
 
-<div style="position:absolute; top:10px; right:20px; width:200px; font-size:18px; align-items:end; text-align:right;" class="justify-content-end">
-    <a href="~/Home/SelectLanguage?LanguageCode=EN" style="color:#000;">@Html.Raw(LanguageCode == "EN" ? "<b>EN</b>" : "EN")</a> | <a href="~/Home/SelectLanguage?LanguageCode=AR" style="color:#000;">@Html.Raw(LanguageCode == "AR" ? "<b>عربي</b>" : "عربي")</a>
-</div>
-
-<img src="~/assets/client.png" style="position:absolute; left:10px; bottom:10px; opacity:0.5; max-width:300px; max-height:300px;" />
-
-
-
-@Scripts.Render("~/bundles/bootstrap")
+</body>

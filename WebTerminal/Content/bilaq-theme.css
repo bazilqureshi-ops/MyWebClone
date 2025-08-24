@@ -1,0 +1,636 @@
+/* BilaQ Theme - Dark Modern */
+
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+:root {
+    --main-bg-color: #18191A;
+    --card-bg-color: #23272F;
+    --border-color: #1DE9B6;
+    --accent-teal: #1DE9B6;
+    --accent-green: #00C9A7;
+    --accent-yellow: #FFC542;
+    --accent-pink: #FF5B8C;
+    --accent-purple: #8B5CF6;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B0B3B8;
+    --table-bg-dark: #2D2F36;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--main-bg-color);
+    color: var(--text-primary);
+}
+
+/* Login Page Styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.login-form {
+    background-color: var(--card-bg-color);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+.form-title {
+    color: var(--text-primary);
+    margin-bottom: 25px;
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--main-bg-color);
+    border: 1px solid var(--table-bg-dark);
+    border-radius: 5px;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 2px rgba(29, 233, 182, 0.2);
+}
+
+.form-group-inline {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    color: var(--text-secondary);
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+.error-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    color: var(--text-primary);
+}
+
+.alert-danger {
+    background-color: #4d1f2d;
+    border: 1px solid var(--accent-pink);
+}
+
+.alert-warning {
+    background-color: #594220;
+    border: 1px solid var(--accent-yellow);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--accent-teal);
+    color: var(--main-bg-color);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: var(--accent-green);
+}
+
+.btn-submit .fa {
+    margin-right: 10px;
+}
+
+.footer-text {
+    margin-top: 30px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.language-switcher {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.language-switcher a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 5px;
+    transition: color 0.3s;
+}
+
+.language-switcher a:hover,
+.language-switcher a.active {
+    color: var(--accent-teal);
+    font-weight: 700;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid var(--accent-teal);
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Terminal Interface Styles */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.terminal-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--main-bg-color);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    background-color: var(--card-bg-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-logo {
+    height: 40px;
+    margin-right: 15px;
+}
+
+.sidebar-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: var(--main-bg-color);
+    border-radius: 8px;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    border: 2px solid var(--accent-teal);
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.terminal-name {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+.action-btn {
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--table-bg-dark);
+    background-color: transparent;
+    color: var(--text-secondary);
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background-color: var(--table-bg-dark);
+    color: var(--text-primary);
+}
+
+.action-btn.primary {
+    background-color: var(--accent-teal);
+    color: var(--main-bg-color);
+    font-weight: 700;
+    border: none;
+}
+
+.action-btn.primary:hover {
+    background-color: var(--accent-green);
+}
+
+.action-btn.danger {
+    color: var(--accent-pink);
+    border-color: var(--accent-pink);
+}
+
+.action-btn.danger:hover {
+    background-color: var(--accent-pink);
+    color: var(--text-primary);
+}
+
+.action-btn-group {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn-group .action-btn {
+    flex: 1;
+    text-align: center;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.logout-btn {
+    display: block;
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: var(--table-bg-dark);
+    color: var(--text-primary);
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.now-serving-card {
+    background-color: var(--card-bg-color);
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.tabs-container {
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.tab-header {
+    display: flex;
+    background-color: var(--main-bg-color);
+}
+
+.tab-link {
+    padding: 15px 25px;
+    border: none;
+    background-color: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-link.active, .tab-link:hover {
+    color: var(--accent-teal);
+    border-bottom-color: var(--accent-teal);
+}
+
+.tab-content {
+    padding: 30px;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Table styles */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--text-primary);
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--table-bg-dark);
+}
+
+.table th {
+    background-color: var(--main-bg-color);
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--table-bg-dark);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: var(--card-bg-color);
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid var(--table-bg-dark);
+    width: 80%;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--table-bg-dark);
+    color: var(--text-primary);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding-top: 20px;
+}
+
+.generate-ticket-form {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+/* InfoBox Styles */
+.infobox-container {
+    background-color: var(--main-bg-color);
+    border-radius: 8px;
+    padding: 25px;
+}
+
+.infobox-container.placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 200px;
+    color: var(--text-secondary);
+}
+
+.infobox-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--table-bg-dark);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.ticket-number {
+    background-color: var(--accent-teal);
+    color: var(--main-bg-color);
+    font-size: 36px;
+    font-weight: 700;
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin-right: 25px;
+}
+
+.ticket-service {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-size: 18px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--table-bg-dark);
+    background-color: var(--card-bg-color);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: var(--table-bg-dark);
+    color: var(--text-primary);
+}
+
+.infobox-footer {
+    display: flex;
+    gap: 15px;
+}
+
+.infobox-footer .form-control {
+    flex-grow: 1;
+}
+
+.customer-details {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--table-bg-dark);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* Waiting List & Park List Styles */
+.empty-state {
+    text-align: center;
+    padding: 50px;
+    color: var(--text-secondary);
+}
+
+.empty-state .fa {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.ticket-id {
+    font-weight: 700;
+    color: var(--accent-teal);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+.btn-icon:hover {
+    color: var(--accent-teal);
+}
