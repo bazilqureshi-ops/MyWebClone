@@ -234,13 +234,24 @@ function getPosition(string, subString, index) {
     return string.split(subString, index).join(subString).length;
 }
 
-function SwitchTab(ShowTab) {
-    $(".AllTabContents").hide();
-    $("#" + ShowTab).show();
-    $(".cTabs").removeClass("active");
-    $(".cTabs").removeAttr("aria-current");
-    $("#" + ShowTab + "Tab").addClass("active");
-    $("#" + ShowTab + "Tab").attr("aria-current","true");
+function SwitchTab(tabIdToShow) {
+    // Hide all tab panes
+    $('.tab-pane').removeClass('active');
+    // Show the selected tab pane
+    $('#' + tabIdToShow).addClass('active');
+
+    // Update the active state of tab links
+    $('.tab-link').removeClass('active');
+    $('button[onclick="SwitchTab(\'' + tabIdToShow + '\')"]').addClass('active');
+}
+
+// Basic modal handling
+function showModal(modalId) {
+    $('#' + modalId).show();
+}
+
+function hideModal(modalId) {
+    $('#' + modalId).hide();
 }
 
 function toTimeString(totalSeconds) {
@@ -315,8 +326,8 @@ function ChangePhone() {
     var customerID = $("#InfoCustomerID").val();
     $.post("Terminal/ChangeCustomerPhone", { CustomerID: customerID, SegmentID: "" }, function (data) {
         $("#GenerateTicketModalBody").html(data);
-        $("#GenerateTicketModal").modal("show");
-        $("#MoreInformationModal").modal("hide");
+        showModal('GenerateTicketModal');
+        hideModal('MoreInformationModal');
     });
 }
 
@@ -398,6 +409,7 @@ function ServiceTransferList(isDirect, tickID) {
 function MoreInformation(TicketID) {
     $.post("Terminal/MoreInformation", { TicketID: TicketID }, function (data) {
         $("#MoreInformationModalBody").html(data);
+        showModal('MoreInformationModal');
     });
 }
 
